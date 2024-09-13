@@ -3,6 +3,7 @@
 #include <random>
 #include <iostream>
 
+// Deck constructor 
 Deck::Deck() {
 	for (int rank = 2; rank <= 14; rank++) {
 		cards.push_back(Card(rank, 'D'));
@@ -12,6 +13,7 @@ Deck::Deck() {
 	}
 }
 
+// to shuffle the ordered deck of cards 
 void Deck::shuffle() {
 	// note: // i referenced https://stackoverflow.com/questions/5008804/how-do-you-generate-uniformly-distributed-random-integers/19728404#19728404
 	
@@ -26,6 +28,7 @@ void Deck::shuffle() {
 	}
 }
 
+// to deal 6 hands of 5 cards 
 void Deck::dealHands(std::vector<std::vector<Card>>& hands) {
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 6; j++) {
@@ -35,6 +38,7 @@ void Deck::dealHands(std::vector<std::vector<Card>>& hands) {
 	}
 }
 
+// printing method to print deck
 void Deck::printDeck(bool singleLine) const {
 	int count = 0;
 	for (int i = 0; i < cards.size(); i++) {
