@@ -1,5 +1,6 @@
 #include "card.h"
 
+// Card constructor 
 Card::Card(int r, char s) : rank(r), suit(s) {}
 
 std::string Card::toString() const {
