@@ -1,11 +1,14 @@
 # FiveCardStud
 
 # cpp compile/run notes:
-	To compile and link: 	c++ -o a.out fivecardstud.cpp card.cpp deck.cpp
+	To compile and link: 				c++ -o a.out fivecardstud.cpp card.cpp deck.cpp
 	To run part 1 (w/o command line args):		./a.out 
 	To run part 2 (w/ command line args):		./a.out ../handsets/threeofakind
 
 # java
+	To compile: 					javac FiveCardStud.java Card.java Deck.java
+	To run part 1 (w/o command line args):		java FiveCardStud
+	To run part 2 (w/ command line args):		java FiveCardStud ../handsets/threeofakind
 # python
 # csharp
 # fortran 
