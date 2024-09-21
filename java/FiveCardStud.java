@@ -6,11 +6,13 @@ import java.util.List;
 
 public class FiveCardStud {
 
+	// main method to handle program flow 
 	public static void main(String[] args) {
+		// initialize a new deck of cards and a list to hold hands
 		Deck deck = new Deck();
 		List<List<Card>> hands = new ArrayList<>();
 		for (int i = 0; i < 6; i++) {
-			hands.add(new ArrayList<>());
+			hands.add(new ArrayList<>()); // create 6 empty hands 
 		}
 		List<HandRank> handRanks = new ArrayList<>();
 
@@ -41,10 +43,12 @@ public class FiveCardStud {
 
 	}
 
+	// enumeration for suits 
 	public enum Suit {
        		DIAMONDS, CLUBS, HEARTS, SPADES
     	}
 
+	// enumeration for hand ranks 
 	public enum HandRank {
         	HIGH_CARD,
         	PAIR,
@@ -58,6 +62,7 @@ public class FiveCardStud {
         	ROYAL_FLUSH
     	}
 
+	// convert hand rank enum to string for display
 	private static String handRankToString(HandRank rank) {
 		switch(rank) {
 			case HIGH_CARD: return "High Card";
@@ -69,62 +74,71 @@ public class FiveCardStud {
             		case FULL_HOUSE: return "Full House";
             		case FOUR_OF_A_KIND: return "Four Of A Kind";
             		case STRAIGHT_FLUSH: return "Straight Flush";
-            		case ROYAL_FLUSH: return "Royal Flush";
+            		case ROYAL_FLUSH: return "Royal Straight Flush";
             		default: return "Unknown";
 		}
 	}
 
+	// method to print winning hand 
 	private static void printWinningHand(List<List<Card>> hands, List<HandRank> handRanks) {
 		System.out.println("--- WINNING HAND ORDER ---");
 		for (int i = 0; i < hands.size(); i++) {
 			List<Card> hand = hands.get(i);
 			for(int j = 0; j < hand.size(); j++) {
-				Card card = hand.get(j);
-				System.out.print(card.toString() + " ");
+				System.out.print(hand.get(j).toString() + " ");
 			}
 			System.out.println("- " + handRankToString(handRanks.get(i)));
 		}
 		System.out.println();
 	}
 
+	// method to print out the 6 hands dealt 
 	private static void printSixHands(List<List<Card>> hands) {
 		System.out.println("*** Here are the six hands...");
 		for (int i = 0; i < 6; i++) {
 			List<Card> hand = hands.get(i);
 			for (int j = 0; j < hand.size(); j++) {
-				Card card = hand.get(j);
-				System.out.print(card.toString() + " ");
+				System.out.print(hand.get(j).toString() + " ");
 			}
 			System.out.println();
 		}
 		System.out.println();
 	}
 
+	// method to clear existing hand ranks and sort hands based on their rank
 	private static void sortHands(List<List<Card>> hands, List<HandRank> handRanks) {
-		Collections.sort(hands, new Comparator<List<Card>>() {
+		handRanks.clear();
+		Collections.sort(hands, new Comparator<List<Card>>() { // used to compare two hands by rank
 			public int compare(List<Card> hand1, List<Card> hand2) {
 				if (compareHands(hand1, hand2)) return -1;
 				else return 1;
 			}
 		});
 
-		for (int i = 0; i < hands.size(); i++) {
-			HandRank rank = classifyHand(hands.get(i));
-			handRanks.add(rank);
+		for (List<Card> hand : hands) {
+			handRanks.add(classifyHand(hand));
 		}
 	}
 
+	// method to classify a hand by rank 
 	public static HandRank classifyHand(List<Card> hand) {
-		Collections.sort(hand, (a, b) -> Integer.compare(b.getRank(), a.getRank())); // descending order
+		// create temp sortedHand to store hand in descending order for easy classification
+		List<Card> sortedHand = new ArrayList<>(hand);
+		Collections.sort(sortedHand, new Comparator<Card>() { 
+			public int compare(Card a, Card b) {
+				return Integer.compare(b.getRank(), a.getRank()); // descending order 
+			}
+		});
 
+		// keep track of suits/ranks occurences 
 		int[] occurrences = new int[15];
 		int[] suitCount = new int[4];
 		char[] suits = {'D', 'C', 'H', 'S'};
 
-		for (int i = 0; i < hand.size(); i++) {
-			occurrences[hand.get(i).getRank()]++;
+		for (int i = 0; i < sortedHand.size(); i++) {
+			occurrences[sortedHand.get(i).getRank()]++;
 			for (int j = 0; j < 4; j++) {
-				if (hand.get(i).getSuit() == suits[j]) {
+				if (sortedHand.get(i).getSuit() == suits[j]) {
 					suitCount[j]++;
 					break;
 				}
@@ -143,8 +157,8 @@ public class FiveCardStud {
 		if (flush && straight) {
 			Set<Integer> royalRanks = new HashSet<>(Arrays.asList(14, 13, 12, 11, 10));
 			Set<Integer> uniqueRanks = new HashSet<>();
-			for (int i = 0; i < hand.size(); i++) {
-				uniqueRanks.add(hand.get(i).getRank());
+			for (int i = 0; i < sortedHand.size(); i++) {
+				uniqueRanks.add(sortedHand.get(i).getRank());
 			}
 
 			if (uniqueRanks.equals(royalRanks)) {
@@ -172,6 +186,7 @@ public class FiveCardStud {
 		return HandRank.HIGH_CARD;
 	}
 
+	// method to compare two hands by rank + tie breaking rules 
 	public static boolean compareHands(List<Card> hand1, List<Card> hand2) {
 		HandRank rank1 = classifyHand(hand1);
 		HandRank rank2 = classifyHand(hand2);
@@ -258,6 +273,7 @@ public class FiveCardStud {
 			return highestCard1.getSuit() > highestCard2.getSuit();
 		}
 
+		// handle general poker rules 
 		if (rank1 == HandRank.FOUR_OF_A_KIND) {
 			int quadRank1 = getQuadRank(hand1);
 			int quadRank2 = getQuadRank(hand2);
@@ -287,11 +303,12 @@ public class FiveCardStud {
 	}
 
 	public static void readDeckFromFile(String filename, List<List<Card>> hands) {
-		hands.clear();
+		hands.clear(); // clear any potentially existing hands 
 		for (int i = 0; i < 6; i++) {
 			hands.add(new ArrayList<>());
 		}
 
+		// use Buffered Reader to read from file 
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line;
 			Set<String> seenCards = new HashSet<>();
@@ -302,7 +319,7 @@ public class FiveCardStud {
 				System.out.println(line); // Display file line to user
 			}
 
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 6; i++) { 
 				String[] cardStrings = lines.get(i).split(",");
 				for (String cardStr : cardStrings) {
 					cardStr = cardStr.trim();
@@ -319,10 +336,10 @@ public class FiveCardStud {
 					int rank = 0;
 
 					// Card conversion
-					if (cardStr.charAt(0) >= '2' && cardStr.charAt(0) <= '9') {
-						rank = cardStr.charAt(0) - '0';
-					} else if (cardStr.equals("10")) {
+					if (cardStr.charAt(0) == '1' && cardStr.charAt(1) == '0') {
 						rank = 10;
+					} else if(cardStr.charAt(0) >= '2' && cardStr.charAt(0) <= '9') {
+						rank = cardStr.charAt(0) - '0';
 					} else {
 						switch (cardStr.charAt(0)) {
 							case 'J': rank = 11; break;
@@ -341,6 +358,7 @@ public class FiveCardStud {
 		}
 	}
 
+	// method to check if a hand is a straight 
 	public static boolean isStraight(List<Card> hand) {
 		Set<Integer> ranks = new HashSet<>();
 
@@ -351,10 +369,12 @@ public class FiveCardStud {
 		List<Integer> sortedRanks = new ArrayList<>(ranks);
 		Collections.sort(sortedRanks); // ascending order
 
+		// special check for Ace-low straight (A, 2, 3, 4, 5)
 		if (sortedRanks.equals(Arrays.asList(2, 3, 4, 5, 14))) {
-			return true;
+			return true; 
 		}
 
+		// checks if it is in consecutive order 
 		for (int i = 0; i < sortedRanks.size() - 1; i++) {
 			if (sortedRanks.get(i + 1) != sortedRanks.get(i) + 1) {
 				return false;
@@ -363,6 +383,7 @@ public class FiveCardStud {
 		return true;
 	}
 
+	// check if a hand is an Ace-low straight
 	public static boolean isAceLowStraight(List<Card> hand) {
 		for (int i = 0; i < hand.size(); i++) {
 			if (hand.get(i).getRank() == 14) {
@@ -372,25 +393,25 @@ public class FiveCardStud {
     		return false;
 	}
 
+	// get highest number card, includes case of Ace-low straight
 	public static Card getHighestCard(List<Card> hand, boolean isAceStraight) {
-		List<Card> tempHand = new ArrayList<>(hand); // Create a copy of the hand
-		if (isAceStraight) {
-        		for (int i = 0; i < tempHand.size(); i++) {
-            			if (tempHand.get(i).getRank() == 14) {
-					tempHand.get(i).setRank(1);
+		Card highestCard = hand.get(0);
+		for (int i = 1; i < hand.size(); i++) {
+			Card currentCard = hand.get(i);
+			if (isAceStraight && currentCard.getRank() == 14) {
+				if (highestCard.getRank() == 14 || currentCard.getRank() > highestCard.getRank()) {
+					highestCard = currentCard;
 				}
-			}
-		}
-
-		Card highestCard = tempHand.get(0);
-		for (int i = 1; i < tempHand.size(); i++) {
-			if (tempHand.get(i).getRank() > highestCard.getRank()) {
-				highestCard = tempHand.get(i);
+			} else {
+				if (currentCard.getRank() > highestCard.getRank()) {
+					highestCard = currentCard;
+				}
 			}
 		}
 		return highestCard;
 	}
 
+	// count occurrences of a specific rank in a hand
 	public static int countOccurrences(List<Card> hand, int rank) {
 		int count = 0;
 		for (int i = 0; i < hand.size(); i++) {
@@ -401,6 +422,7 @@ public class FiveCardStud {
 		return count;
 	}
 	
+	// get the highest card not part of a pair
 	public static Card getHighestNonPairCard(List<Card> hand) {
 		List<Card> tempHand = new ArrayList<>();
 
@@ -419,7 +441,8 @@ public class FiveCardStud {
 
 		return highestCard;
 	}
-
+	
+	// identify kicker card in a hand (not part of pair)
 	public static int getKicker(List<Card> hand) {
 		int maxVal = 0;
 		for (int i = 0; i < hand.size(); i++) {
@@ -430,6 +453,7 @@ public class FiveCardStud {
 		return maxVal;
 	}
 
+	// get the rank (value) of the pair in a hand
 	public static int getPairRank(List<Card> hand) {
 		for (int i = 0; i < hand.size(); i++) {
 			if (countOccurrences(hand, hand.get(i).getRank()) == 2) {
@@ -439,6 +463,7 @@ public class FiveCardStud {
 		return -1;
 	}
 
+	// get the highest rank (value) of pairs in a hand
 	public static int getHighestPairRank(List<Card> hand) {
 		int highestPair = -1;
 		for (int i = 0; i < hand.size(); i++) {
@@ -449,6 +474,7 @@ public class FiveCardStud {
 		return highestPair;
 	}
 
+	// get the lowest rank (value) of pairs in a hand
 	public static int getLowestPairRank(List<Card> hand) {
 		int lowestPair = 15;
 		for (int i = 0; i < hand.size(); i++) {
@@ -458,11 +484,12 @@ public class FiveCardStud {
 		}
 
 		if (lowestPair == 15) {
-			return -1; // may remove if statement 
+			return -1;  
 		}
 		return lowestPair;
 	}
 
+	// get the rank of the three-of-a-kind in a hand
 	public static int getTripletRank(List<Card> hand) {
 		for (int i = 0; i < hand.size(); i++) {
 			if (countOccurrences(hand, hand.get(i).getRank()) == 3) {
@@ -472,6 +499,7 @@ public class FiveCardStud {
 		return -1;
 	}
 
+	// get the rank of the four-of-a-kind in a hand
 	public static int getQuadRank(List<Card> hand) {
 		for (int i = 0; i < hand.size(); i++) {
 			if (countOccurrences(hand, hand.get(i).getRank()) == 4) {
