@@ -1,7 +1,7 @@
 // card class
 
 public class Card {
-	private int rank;
+	private int rank; // card value
 	private char suit;
 
 	// card constructor
@@ -10,18 +10,22 @@ public class Card {
 		this.suit = suit;
 	}
 
+	// getter method to retrieve the rank of the car
 	public int getRank() {
 		return rank;
 	}
 
+	// getter method to retrieve the suit of the card
 	public char getSuit() {
 		return suit;
 	}
 
+	// setter method to set rank (value) of a card
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
 
+	// method to convert the card to a string representation
 	public String toString() {
 		String rankStr;
 		switch(rank) {
@@ -35,6 +39,7 @@ public class Card {
 		return rankStr + suit;
 	}
 
+	// static method to create a Card object from a string representation
 	public static Card fromString(String cardStr) {
 		char suit = cardStr.charAt(cardStr.length() - 1);
 		String rankStr = cardStr.substring(0, cardStr.length() - 1);
