@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public class Deck {
     	private List<Card> cards; 
 
-    	public Deck() {
+    	// Deck constructor 
+	public Deck() {
         	cards = new List<Card>();
 		for (int rank = 2; rank <= 14; rank++) {
 			cards.Add(new Card(rank, 'D'));
@@ -14,17 +15,20 @@ public class Deck {
 		}
     	}
 
+	// randomly shuffles deck of cards 
     	public void Shuffle() {
-        	Random rng = new Random();
+		// creates a new instance of the Random class to generate random numbers
+        	Random rng = new Random(); 
         	int n = cards.Count;
         	while (n > 1) {
-            		int k = rng.Next(n--);
+            		int k = rng.Next(n--); // generates a random index 
             		Card value = cards[k];
             		cards[k] = cards[n];
             		cards[n] = value;
         	}
     	}
 
+	// method to deal 6 hands of 5 cards 
     	public void DealHands(List<List<Card>> hands) {
         	for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < hands.Count; j++) {
@@ -33,7 +37,8 @@ public class Deck {
 			}
 		}
     	}
-
+	
+	// method to print the cards in the deck, singleLine bool used to start a new line
     	public void PrintDeck(bool singleLine) {
         	int count = 0;
 		foreach (var card in cards) {

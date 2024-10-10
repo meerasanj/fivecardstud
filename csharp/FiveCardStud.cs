@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+// main method to handle program flow 
 public class FiveCardStud {
 	public static void Main(string[] args) {
         	Deck deck = new Deck();
         	List<List<Card>> hands = new List<List<Card>>();
 
         	for (int i = 0; i < 6; i++) {
-        	    	hands.Add(new List<Card>()); // Create 6 empty hands
+        	    	hands.Add(new List<Card>()); // create 6 empty hands
         	}
 
         	List<HandRank> handRanks = new List<HandRank>();
 
         	Console.WriteLine("*** P O K E R    H A N D    A N A L Y Z E R ***\n");
 
-        	if (args.Length > 0) {
+        	if (args.Length > 0) { // part 2 w/ command line args 
         		Console.WriteLine("*** USING TEST DECK ***\n");
             		Console.WriteLine($"*** File: {args[0]}");
             		ReadDeckFromFile(args[0], hands);
-        	} else {
+        	} else { // part 1 w/o command line args
 			Console.WriteLine("*** USING RANDOMIZED DECK OF CARDS ***\n");
             		Console.WriteLine("*** Shuffled 52 card deck:");
             		deck.Shuffle();
@@ -32,16 +33,16 @@ public class FiveCardStud {
             		Console.WriteLine();
         	}
 
-		//List<List<Card>> originalHands = CloneHands(hands);
-
         	SortHands(hands, handRanks);
         	PrintWinningHand(hands, handRanks);
 	}
 
+	// enumeration for suits
 	public enum Suit {
         	Diamonds, Clubs, Hearts, Spades
     	}
 
+	// enumeration for HandRanks
 	public enum HandRank {
         	HighCard,
         	Pair,
@@ -55,6 +56,7 @@ public class FiveCardStud {
         	RoyalFlush
     	}
 
+	// method to convert HandRanks to string
 	private static string HandRankToString(HandRank rank) {
         	switch (rank) {
         		case HandRank.HighCard: return "High Card";
@@ -71,33 +73,34 @@ public class FiveCardStud {
         	}
     	}
 
+	// method to print winning hand 
 	private static void PrintWinningHand(List<List<Card>> hands, List<HandRank> handRanks) {
         	Console.WriteLine("--- WINNING HAND ORDER ---");
         	for (int i = 0; i < hands.Count; i++) {
-            	foreach (var card in hands[i]) {
-                	Console.Write($"{card} ");
-            	}
-            	Console.WriteLine($"- {HandRankToString(handRanks[i])}");
+            		foreach (var card in hands[i]) {
+                		Console.Write($"{card} ");
+            		}
+            		Console.WriteLine($"- {HandRankToString(handRanks[i])}");
         	}
         	Console.WriteLine();
     	}
 
+	// method to print 6 hands of 5 cards 
 	private static void PrintSixHands(List<List<Card>> hands) {
         	Console.WriteLine("*** Here are the six hands...");
         	for (int i = 0; i < 6; i++) {
-            	foreach (var card in hands[i]) {
-                	Console.Write($"{card} ");
-            	}
-            	Console.WriteLine();
+            		foreach (var card in hands[i]) {
+                		Console.Write($"{card} ");
+            		}
+            		Console.WriteLine();
         	}
         	Console.WriteLine();
     	}
 
+	// method to sort hands based on ranks 
 	private static void SortHands(List<List<Card>> hands, List<HandRank> handRanks) {
     		handRanks.Clear();
 
-    		//hands.Sort(new Comparison<List<Card>>(CompareHandsWrapper));
-		//hands.Sort(CompareHands);	
 		hands.Sort(CompareHandsWrapper);
 
     		for (int i = 0; i < hands.Count; i++) {
@@ -106,6 +109,7 @@ public class FiveCardStud {
 		}
 	}
 
+	// helper method that uses compareHands() to see which hand is higher rank
 	private static int CompareHandsWrapper(List<Card> hand1, List<Card> hand2) {
 		bool isHand1Better = CompareHands(hand1, hand2);
 		if (isHand1Better) {
@@ -115,6 +119,7 @@ public class FiveCardStud {
 		}
 	}
 
+	// method to compare two Card objects based on their ranks in descending order
 	public static int CompareCardsByRankDescending(Card card1, Card card2) {
 		if (card1.GetRank() > card2.GetRank()) {
 			return -1;
@@ -124,14 +129,16 @@ public class FiveCardStud {
 		return 0;
 	}
 
+	// method to classify hand rank
 	public static HandRank ClassifyHand(List<Card> hand) {
-        	List<Card> handCopy = new List<Card>(hand);
+        	List<Card> handCopy = new List<Card>(hand); // create copy to avoid affecting original hand 
 		handCopy.Sort(CompareCardsByRankDescending); 
 
         	int[] occurrences = new int[15];
         	int[] suitCount = new int[4];
 		char[] suits = new char[] { 'D', 'C', 'H', 'S' };
 	
+		// count occurences of values and suits
         	for (int i = 0; i < handCopy.Count; i++) {
 			occurrences[handCopy[i].GetRank()]++;
 			for (int j = 0; j < 4; j++) {
@@ -184,6 +191,7 @@ public class FiveCardStud {
         	return HandRank.HighCard;
     	}
 
+	// method to determine rank of hand based on card combinations 
 	public static bool CompareHands(List<Card> hand1, List<Card> hand2) {
         	HandRank rank1 = ClassifyHand(hand1);
         	HandRank rank2 = ClassifyHand(hand2);
@@ -192,12 +200,14 @@ public class FiveCardStud {
             		return rank1 > rank2;
         	}
 
+		// case 1: equal strength Flush
 		if (rank1 == HandRank.Flush || rank1 == HandRank.StraightFlush || rank1 == HandRank.RoyalFlush) {
             		Card highestCard1 = GetHighestCard(hand1, false);
             		Card highestCard2 = GetHighestCard(hand2, false);
             		return CompareCards(highestCard1, highestCard2);
         	}
 
+		// case 2: equal strength Straight
 		if (rank1 == HandRank.Straight) {
             		bool checkAce1 = IsAceLowStraight(hand1);
             		bool checkAce2 = IsAceLowStraight(hand2);
@@ -206,6 +216,7 @@ public class FiveCardStud {
             		return CompareCards(highestCard1, highestCard2);
         	}
 
+		// case 3: equal strength Two Pair 
         	if (rank1 == HandRank.TwoPair) {
             		int highPair1 = GetHighestPairRank(hand1);
             		int highPair2 = GetHighestPairRank(hand2);
@@ -220,6 +231,7 @@ public class FiveCardStud {
             		return CompareCards(kicker1, kicker2);
         	}
 
+		// case 4: equal strength Pair 
         	if (rank1 == HandRank.Pair) {
             		int pairRank1 = GetPairRank(hand1);
             		int pairRank2 = GetPairRank(hand2);
@@ -230,24 +242,28 @@ public class FiveCardStud {
             		return CompareCards(highVal1, highVal2);
         	}
 
+		// case 5: equal strength High Card
         	if (rank1 == HandRank.HighCard) {
             		Card highestCard1 = GetHighestCard(hand1, false);
             		Card highestCard2 = GetHighestCard(hand2, false);
             		return CompareCards(highestCard1, highestCard2);
         	}
 
+		// directly compare quadranks
         	if (rank1 == HandRank.FourOfAKind) {
             		int quadRank1 = GetQuadRank(hand1);
             		int quadRank2 = GetQuadRank(hand2);
             		return quadRank1 > quadRank2;
         	}
 
+		// directly compare tripletranks
 		if (rank1 == HandRank.ThreeOfAKind) {
             		int tripletRank1 = GetTripletRank(hand1);
             		int tripletRank2 = GetTripletRank(hand2);
             		return tripletRank1 > tripletRank2;
         	}
 
+		// compare triplet ranks first, then by pair if equal
         	if (rank1 == HandRank.FullHouse) {
             		int tripletRank1 = GetTripletRank(hand1);
             		int tripletRank2 = GetTripletRank(hand2);
@@ -261,6 +277,7 @@ public class FiveCardStud {
         	return false;
 	}
 
+	// check if a hand is an Ace-low straight
 	public static bool IsAceLowStraight(List<Card> hand) {
         	for (int i = 0; i < hand.Count; i++) {
 			if (hand[i].GetRank() == 14) {
@@ -270,6 +287,7 @@ public class FiveCardStud {
 		return false;
     	}
 
+	// method to count occurences of a rank
 	public static int CountOccurrences(List<Card> hand, int rank) {
         	int count = 0;
 		for (int i = 0; i < hand.Count; i++) {
@@ -280,6 +298,7 @@ public class FiveCardStud {
 		return count;
     	}
 
+	// method to find the highest card not part of a pair
 	public static Card GetHighestNonPairCard(List<Card> hand) {
         	List<Card> tempHand = new List<Card>();
 		for (int i = 0; i < hand.Count; i++) {
@@ -297,6 +316,7 @@ public class FiveCardStud {
 		return highestCard;
     	}
 
+	// identify kicker card in a hand (not part of pair)
 	public static Card GetKicker(List<Card> hand) {
   		Card kicker = null;
 		int maxVal = 0;
@@ -309,6 +329,7 @@ public class FiveCardStud {
 		return kicker;
     	}
 
+	// get the rank (value) of the pair in a hand
 	public static int GetPairRank(List<Card> hand) {
         	for (int i = 0; i < hand.Count; i++) {
 			if (CountOccurrences(hand, hand[i].GetRank()) == 2) {
@@ -318,7 +339,8 @@ public class FiveCardStud {
 
 		return -1;
 	}
-
+	
+	// get the highest rank (value) of pairs in a hand
 	public static int GetHighestPairRank(List<Card> hand) {
         	int highestPair = -1;
 		for (int i = 0; i < hand.Count; i++) {
@@ -329,6 +351,7 @@ public class FiveCardStud {
 		return highestPair;
     	}
 
+	// get the lowest rank (value) of pairs in a hand
 	public static int GetLowestPairRank(List<Card> hand) {
         	int lowestPair = 15;
 		for (int i = 0; i < hand.Count; i++) {
@@ -343,6 +366,7 @@ public class FiveCardStud {
 		return lowestPair;
     	}	
 
+	// get the rank of the three-of-a-kind in a hand
 	public static int GetTripletRank(List<Card> hand) {
         	for (int i = 0; i < hand.Count; i++) {
                         if (CountOccurrences(hand, hand[i].GetRank()) == 3) {
@@ -352,6 +376,7 @@ public class FiveCardStud {
 		return -1;
 	}	
 
+	// get the rank of the four-of-a-kind in a hand
 	public static int GetQuadRank(List<Card> hand) {
      		for (int i = 0; i < hand.Count; i++) {
                         if (CountOccurrences(hand, hand[i].GetRank()) == 4) {
@@ -362,6 +387,7 @@ public class FiveCardStud {
 		return -1;
     	}
 
+	// compares two cards by rank, then suit
 	private static bool CompareCards(Card card1, Card card2) {
         	if (card1.GetRank() != card2.GetRank()) {
             		return card1.GetRank() > card2.GetRank();
@@ -369,6 +395,7 @@ public class FiveCardStud {
         	return card1.GetSuit() > card2.GetSuit(); // If identical
     	}
 
+	// method to handle part 2 w/ command line args 
 	public static void ReadDeckFromFile(string filename, List<List<Card>> hands) {
         	hands.Clear();
         	for (int i = 0; i < 6; i++) {
@@ -402,7 +429,7 @@ public class FiveCardStud {
 					char suit = trimmedCard[^1]; // or .Last()?
 					int rank = 0;
 
-					// Determine the rank
+					// determine the rank
 					if (char.IsDigit(trimmedCard[0])) {
 						if (trimmedCard[0] == '1' && trimmedCard.Length > 1 && trimmedCard[1] == '0') {
 							rank = 10;
@@ -429,6 +456,7 @@ public class FiveCardStud {
 		}
     	}
 
+	// method to check if a hand is a straight 
 	public static bool IsStraight(List<Card> hand) {
         	HashSet<int> ranks = new HashSet<int>();
 		for (int i = 0; i < hand.Count; i++) {
@@ -450,6 +478,7 @@ public class FiveCardStud {
 		return true;
     	}
 
+	// get highest number card, includes case of Ace-low straight
 	public static Card GetHighestCard(List<Card> hand, bool isAceStraight) {
 		Card highestCard = hand[0];
 
@@ -468,6 +497,7 @@ public class FiveCardStud {
 		return highestCard;
 	}
 
+	// method to retrrive rank of card
 	public static int GetRank(string cardStr) {
         	if (cardStr.StartsWith("10")) return 10;
         	char rank = cardStr[0];
