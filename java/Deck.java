@@ -29,8 +29,7 @@ public class Deck {
 		}
 	}
 
-	// method to print the cards in the deck
-	// singleLine bool used to start a new line or not 
+	// method to print the cards in the deck, singleLine bool used to start a new line or not 
 	public void printDeck(boolean singleLine) {
 		int count = 0;
 		for (int i = 0; i < cards.size(); i++) {

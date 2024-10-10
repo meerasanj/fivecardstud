@@ -20,7 +20,7 @@ public class FiveCardStud {
 		System.out.println();
 		System.out.println();
 
-		if (args.length > 0) { // Part 2 with command line args
+		if (args.length > 0) { // part 2 with command line args
 			System.out.println("*** USING TEST DECK ***");
             		System.out.println();
             		System.out.println("*** File: " + args[0]);
@@ -302,6 +302,7 @@ public class FiveCardStud {
 		return false;
 	}
 
+	// method to handle command line args 
 	public static void readDeckFromFile(String filename, List<List<Card>> hands) {
 		hands.clear(); // clear any potentially existing hands 
 		for (int i = 0; i < 6; i++) {
@@ -335,7 +336,7 @@ public class FiveCardStud {
 					char suit = cardStr.charAt(cardStr.length() - 1);
 					int rank = 0;
 
-					// Card conversion
+					// card rank conversion
 					if (cardStr.charAt(0) == '1' && cardStr.charAt(1) == '0') {
 						rank = 10;
 					} else if(cardStr.charAt(0) >= '2' && cardStr.charAt(0) <= '9') {
@@ -444,13 +445,15 @@ public class FiveCardStud {
 	
 	// identify kicker card in a hand (not part of pair)
 	public static int getKicker(List<Card> hand) {
+		int kickerIndex = -1;
 		int maxVal = 0;
 		for (int i = 0; i < hand.size(); i++) {
 			if (countOccurrences(hand, hand.get(i).getRank()) == 1 && hand.get(i).getRank() > maxVal) {
 				maxVal = hand.get(i).getRank();
+				kickerIndex = i;
 			}
 		}
-		return maxVal;
+		return kickerIndex;
 	}
 
 	// get the rank (value) of the pair in a hand
