@@ -15,10 +15,10 @@ public class FiveCardStud {
 
         	List<HandRank> handRanks = new List<HandRank>();
 
-        	Console.WriteLine("*** P O K E R    H A N D    A N A L Y Z E R ***\n");
+        	Console.WriteLine("*** P O K E R    H A N D    A N A L Y Z E R ***\n\n");
 
         	if (args.Length > 0) { // part 2 w/ command line args 
-        		Console.WriteLine("*** USING TEST DECK ***\n");
+			Console.WriteLine("*** USING TEST DECK ***\n");
             		Console.WriteLine($"*** File: {args[0]}");
             		ReadDeckFromFile(args[0], hands);
         	} else { // part 1 w/o command line args
