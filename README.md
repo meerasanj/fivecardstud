@@ -21,6 +21,20 @@
 	To run part 1 (w/o command line args):			./a.out
 	To run part 2 (w/ command line args):  			./a.out ../handsets/threeofakind
 
+# julia
+	To compile & run part 1 (w/o command line args:		julia FiveCardStud.jl
+	To run part 2 (w command line args):			julia FiveCardStud.jl ../handsets/threeofakind
+
+# go
+	To compile and link: 					go build -o a.out FiveCardStud.go Card.go Deck.go
+	To run part 1 (w/o command line args):			./a.out
+	To run part 2 (w command line args):			./a.out ../handsets/threeofakind
+
+# perl
+
+# rust
+
+# lisp
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
