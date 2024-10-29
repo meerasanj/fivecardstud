@@ -10,7 +10,7 @@
 	To run part 1 (w/o command line args):			java FiveCardStud
 	To run part 2 (w/ command line args):			java FiveCardStud ../handsets/threeofakind
 # python
-	To compile & run part 1 (w/o command line args:		python3 FiveCardStud.py                                     
+	To compile & run part 1 (w/o command line args):	python3 FiveCardStud.py                                     
 	To run part 2 (w command line args):          		python3 FiveCardStud.py ../handsets/threeofakind
 # csharp
 	To compile and link:                                    csc FiveCardStud.cs Deck.cs Card.cs
@@ -31,7 +31,8 @@
 	To run part 2 (w command line args):			./a.out ../handsets/threeofakind
 
 # perl
-
+	To compile & run part 1 (w/o command line args):	perl FiveCardStud.pl
+	To run part 2 (w command line args):			perl FiveCardStud.pl ../handsets/threeofakind
 # rust
 
 # lisp
