@@ -11,13 +11,16 @@
 	To compile and link: 					javac FiveCardStud.java Card.java Deck.java
 	To run part 1 (w/o command line args):			java FiveCardStud
 	To run part 2 (w/ command line args):			java FiveCardStud ../handsets/threeofakind
+
 # python
 	To compile & run part 1 (w/o command line args):	python3 FiveCardStud.py                                     
 	To run part 2 (w command line args):          		python3 FiveCardStud.py ../handsets/threeofakind
+
 # csharp
 	To compile and link:                                    csc FiveCardStud.cs Deck.cs Card.cs
-        To run part 1 (w/o command line args):          	mono FiveCardStud.exe
-        To run part 2 (w/ command line args):           	mono FiveCardStud.exe ../handsets/threeofakind
+	To run part 1 (w/o command line args):          	mono FiveCardStud.exe
+	To run part 2 (w/ command line args):           	mono FiveCardStud.exe ../handsets/threeofakind
+
 # fortran
 	To compile and link: 					gfortran -o a.out Deck.f90 Card.f90 HandRankings.f90 FiveCardStud.f90
 	To run part 1 (w/o command line args):			./a.out
