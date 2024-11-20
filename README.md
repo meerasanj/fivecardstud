@@ -1,6 +1,8 @@
 # FiveCardStud
 
-# cpp compile/run notes:
+# INSTRUCTIONS - How to Compile and Run 
+
+# cpp
 	To compile and link: 					c++ -o a.out fivecardstud.cpp card.cpp deck.cpp
 	To run part 1 (w/o command line args):			./a.out 
 	To run part 2 (w/ command line args):			./a.out ../handsets/threeofakind
@@ -34,8 +36,16 @@
 	To compile & run part 1 (w/o command line args):	perl FiveCardStud.pl
 	To run part 2 (w command line args):			perl FiveCardStud.pl ../handsets/threeofakind
 # rust
+	To compile and link:					In the rust directory: cargo build
+	To run part 1 (w/o command line args):			cargo run
+	To run part 2 (w command line args):			cargo run ../handsets/threeofakind
 
 # lisp
+	To compile and link:					chmod u+x FiveCardStud.lisp
+	To run part 1 (w/o command line args):			./FiveCardStud.lisp
+	To run part 2 (w command line args):			./FiveCardStud.lisp ../handsets/threeofakind
+
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
