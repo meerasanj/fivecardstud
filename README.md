@@ -23,6 +23,8 @@ The languages included in this project are:
 
 ## Instructions - How to Compile and Run
 
+Note: Each language implementation is stored in its own directory. The handsets directory contains test cases used to validate the correctness of the logic.
+
 ### cpp
 	To compile and link: 					c++ -o a.out fivecardstud.cpp card.cpp deck.cpp
 	To run part 1 (w/o command line args):			./a.out 
